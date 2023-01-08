@@ -202,7 +202,7 @@ AllowedIPs = ${client.address}/32`;
     const config = await this.getConfig();
     const client = await this.getClient({ clientId });
 
-    return `
+    result = `
 [Interface]
 PrivateKey = ${client.privateKey}
 Address = ${client.address}/24
@@ -210,11 +210,17 @@ ${WG_DEFAULT_DNS ? `DNS = ${WG_DEFAULT_DNS}` : ''}
 ${WG_MTU ? `MTU = ${WG_MTU}` : ''}
 
 [Peer]
-PublicKey = ${config.server.publicKey}
+PublicKey = ${config.server.publicKey}` 
+if (client.preSharedKey != "") {
+  result += `
 PresharedKey = ${client.preSharedKey}
+`
+}
+result += `
 AllowedIPs = ${WG_ALLOWED_IPS}
 PersistentKeepalive = ${WG_PERSISTENT_KEEPALIVE}
 Endpoint = ${WG_HOST}:${WG_PORT}`;
+  return result;
   }
 
   async getClientQRCodeSVG({ clientId }) {

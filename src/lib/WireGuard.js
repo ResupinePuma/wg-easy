@@ -202,7 +202,7 @@ AllowedIPs = ${client.address}/32`;
     const config = await this.getConfig();
     const client = await this.getClient({ clientId });
 
-    result = `
+    let result = `
 [Interface]
 PrivateKey = ${client.privateKey}
 Address = ${client.address}/24

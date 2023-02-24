@@ -94,7 +94,7 @@ module.exports = class WireGuard {
 # Server
 [Interface]
 PrivateKey = ${config.server.privateKey}
-Address = ${config.server.address}/24
+Address = ${config.server.address}
 ListenPort = ${WG_PORT}
 PreUp = ${WG_PRE_UP}
 PostUp = ${WG_POST_UP}
@@ -113,8 +113,7 @@ PublicKey = ${client.publicKey}`
 
 if (client.preSharedKey != "") {
   result += `
-PresharedKey = ${client.preSharedKey}
-`
+PresharedKey = ${client.preSharedKey}`
 }
 result += `
 AllowedIPs = ${client.address}/32`;
@@ -275,7 +274,7 @@ Endpoint = ${WG_HOST}:${WG_PORT}`;
     };
 
     config.clients[clientId] = client;
-
+    await Util.exec('ip route add ' + address + ' dev wg0');
     await this.saveConfig();
 
     return client;
@@ -285,6 +284,7 @@ Endpoint = ${WG_HOST}:${WG_PORT}`;
     const config = await this.getConfig();
 
     if (config.clients[clientId]) {
+      await Util.exec('ip route del ' + config.clients[clientId].address + ' dev wg0');
       delete config.clients[clientId];
       await this.saveConfig();
     }
@@ -296,6 +296,7 @@ Endpoint = ${WG_HOST}:${WG_PORT}`;
     client.enabled = true;
     client.updatedAt = new Date();
 
+    await Util.exec('ip route add ' + client.address + ' dev wg0');
     await this.saveConfig();
   }
 
@@ -304,7 +305,7 @@ Endpoint = ${WG_HOST}:${WG_PORT}`;
 
     client.enabled = false;
     client.updatedAt = new Date();
-
+    await Util.exec('ip route del ' + client.address + ' dev wg0');
     await this.saveConfig();
   }
 

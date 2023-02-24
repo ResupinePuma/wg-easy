@@ -73,7 +73,7 @@ The Web UI will now be available on `http://0.0.0.0:51821`.
 
 ### 3. Sponsor
 
-Are you enjoying this project? [Buy me a beer!](https://github.com/sponsors/WeeJeWel) 🍻
+Are you enjoying this project? [Support author!](https://github.com/sponsors/WeeJeWel) 🍻
 
 ## Options
 
